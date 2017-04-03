@@ -190,7 +190,7 @@ module.exports = function(app, express, http) {
 		    	// fs.appendFileSync(source,"END:VCALENDAR\n");
 		    	s += 'BEGIN:VCALENDAR\n';
 		    	s += 'VERSION:2.0\n';
-		    	s += "PRODID:-//www.celcat.fr//NONSGML\nCreateICSFiles//FR\n";
+		    	s += "PRODID:-//www.celcat.fr//NONSGML CreateICSFiles//FR\n";
 		    	s += "X-WR-CALNAME:VETO\n";
 		    	result.timetable.event.forEach((entry) => {
 		    		s += "BEGIN:VEVENT\n";

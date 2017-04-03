@@ -24,6 +24,7 @@ module.exports = function(app, express, http) {
 		  //the whole response has been recieved, so we just print it out here
 		  response.on('end', function () {
 		    // console.log(str);s
+		    res.writeHeader(200 , {"Content-Type" : "charset=utf-8"});
 		    utils.parse(res, str);
 		  });
 		}
