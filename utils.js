@@ -2,6 +2,12 @@ module.exports = function(app, express, http) {
 	
 	var module = {}
 
+	var ChangeEte = new Date(2017,2,26);
+	// 25 Mars 2017
+
+	var ChangeHiver = new Date(2017,7,29);
+	// 28 Octobre 2017
+
 	Date.prototype.yyyymmdd = function() {
 	  var mm = this.getMonth() + 1; // getMonth() is zero-based
 	  var dd = this.getDate();
@@ -25,12 +31,29 @@ module.exports = function(app, express, http) {
 
 		return realDate.yyyymmdd();
 	}
-	function formatHeureDebut(heure) {
-		var hours = Number(heure.slice(0,2))-2;
+	function getDate(entry) {
+		date = entry.$.date
+		var d = date.split('/');
+		var realDate = new Date(Number(d[2]), Number(d[1])-1, Number(d[0])+1);
+		realDate.setDate(realDate.getDate() + Number(entry.day[0])-1)
+		return realDate;
+	}
+	function formatHeureDebut(heure, entry) {
+		if ((getDate(entry) > ChangeEte) && (getDate(entry) < ChangeHiver)) {
+			var hours = Number(heure.slice(0,2))-2;
+		}
+		else {
+			var hours = Number(heure.slice(0,2))-1;
+			// console.log('blbl');
+		}
 		return n(hours)+heure.slice(2,4);
 	}
-	function formatHeureFin(heure) {
-		var hours = Number(heure.slice(4,6))-2;
+	function formatHeureFin(heure, entry) {
+		if ((getDate(entry) > ChangeEte) && (getDate(entry) < ChangeHiver)) {
+			var hours = Number(heure.slice(4,6))-2;
+		} else {
+			var hours = Number(heure.slice(4,6))-1;
+		}
 		return n(hours)+heure.slice(6,8);
 	}
 	function formatSummary(entry) {
@@ -153,6 +176,7 @@ module.exports = function(app, express, http) {
 		var s = "";
 		// fs.readFile(__dirname + '/ent.xml', function(err, data) {
 		    parser.parseString(htmlcontent, function (err, result) {
+		    	var i = 100000;
 		    	/*
 				BEGIN:VCALENDAR
 				VERSION:2.0
@@ -195,9 +219,10 @@ module.exports = function(app, express, http) {
 		    	s += "X-WR-CALNAME:VETO\n";
 		    	result.timetable.event.forEach((entry) => {
 		    		s += "BEGIN:VEVENT\n";
-		    		s += "DTSTART:"+formatDate(entry)+"T"+formatHeureDebut(entry.$.timesort)+"00Z\n";
-		    		s += "DTEND:"+formatDate(entry)+"T"+formatHeureFin(entry.$.timesort)+"00Z\n";
-		    		s += "UID:CELCAT - VETO ("+entry.$.id+")\n";
+		    		s += "DTSTART:"+formatDate(entry)+"T"+formatHeureDebut(entry.$.timesort, entry)+"00Z\n";
+		    		s += "DTEND:"+formatDate(entry)+"T"+formatHeureFin(entry.$.timesort, entry)+"00Z\n";
+		    		s += "UID:CELCAT - VETO ("+entry.$.id+i.toString()+")\n";
+		    		i++;
 		    		s += formatSummary(entry)+'\n';
 		    		s += formatLocation(entry)+'\n';
 		    		s += formatDescription(entry)+'\n';
