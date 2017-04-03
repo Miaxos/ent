@@ -134,9 +134,10 @@ module.exports = function(app, express, http) {
 			if (entry.notes !== undefined) {
 				if (entry.notes.lenght !== 0) {
 					s = s + "\\nRemarques: "
-					s = s + entry.notes[0];
+					s = s + JSON.stringify(entry.notes[0]);
+					// console.log(entry.notes[0]);
 					for (var i = 1; i < entry.notes.length; i++) {
-						s = s + ", " + entry.notes[i];
+						s = s + ", " + entry.notes[i].toString();
 					}
 				}
 			}
